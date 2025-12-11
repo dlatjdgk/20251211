@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>업그레이드된 반응형 소개 페이지</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- 1. 기본 스타일 및 변수 설정 --- */
+        :root {
+            --primary-color: #2563eb;       /* 메인 파란색 */
+            --primary-light: #60a5fa;       /* 밝은 파란색 */
+            --accent-color: #f59e0b;        /* 강조색 (오렌지) */
+            --text-color: #1e293b;          /* 텍스트 색상 */
+            --card-bg: rgba(255, 255, 255, 0.9); /* 카드 배경 (반투명) */
+            --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.1); /* 그림자 */
+        }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            margin: 0;
+            padding: 0;
+            color: var(--text-color);
+            
+            /* ★ 움직이는 배경 애니메이션 설정 ★ */
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            min-height: 100vh;
+        }
+
+        /* 배경 움직임 키프레임 */
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* --- 2. 헤더 및 네비게이션 --- */
+        header {
+            /* 글래스모피즘 (유리 효과) */
+            background-color: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        /* 모바일 메뉴 (기본 숨김) */
+        .main-nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: none; /* JS로 제어 */
+            flex-direction: column;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.9); /* 모바일 메뉴 배경 */
+        }
+
+        .main-nav.active ul {
+            display: flex; /* 활성화 시 보임 */
+        }
+
+        .main-nav li a {
+            display: block;
+            padding: 15px 20px;
+            text-decoration: none;
+            color: white;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transition: 0.3s;
+        }
+
+        .main-nav li a:hover {
+            background-color: var(--primary-color);
+            padding-left: 30px; /* 호버 시 텍스트 이동 효과 */
+        }
+
+        .menu-toggle {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.8em;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        /* 햄버거 버튼 회전 효과 */
+        .menu-toggle.open {
+            transform: rotate(90deg);
+            color: var(--accent-color);
+        }
+
+        /* --- 3. 메인 콘텐츠 --- */
+        main {
+            padding: 30px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .content-section {
+            margin-bottom: 40px;
+            padding: 30px;
+            background-color: var(--card-bg); /* 반투명 흰색 */
+            border-radius: 15px;
+            box-shadow: var(--shadow-md);
+            backdrop-filter: blur(5px);
+        }
+
+        h1, h2, h3 {
+            color: var(--primary-color);
+            margin-top: 0;
+        }
+
+        /* --- 4. 카드 디자인 (프로필, 프로젝트) --- */
+        .profile-card, .project-card {
+            background: white;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        /* ★ 역동적인 카드 호버 효과 ★ */
+        .project-card:hover {
+            transform: translateY(-10px); /* 위로 붕 뜨는 효과 */
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        }
+
+        /* --- 5. 스킬 그리드 (버튼 느낌) --- */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .skill-item {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            color: white;
+            padding: 15px;
+            text-align: center;
+            border-radius: 50px; /* 둥근 버튼 모양 */
+            font-weight: bold;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            cursor: default;
+            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* 통통 튀는 효과 */
+        }
+
+        .skill-item:hover {
+            transform: scale(1.1); /* 커짐 */
+            background: linear-gradient(135deg, var(--accent-color), #fbbf24); /* 색상 변경 */
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: white;
+            font-size: 0.9em;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+        }
+
+        /* --- 6. 반응형 미디어 쿼리 --- */
+        
+        /* 태블릿 (600px 이상) */
+        @media (min-width: 600px) {
+            .skills-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            .project-card {
+                display: inline-block;
+                width: 46%;
+                margin-right: 4%;
+                vertical-align: top;
+            }
+            .project-card:nth-child(even) {
+                margin-right: 0;
+            }
+        }
+
+        /* 데스크톱 (1024px 이상) */
+        @media (min-width: 1024px) {
+            .menu-toggle {
+                display: none; /* 햄버거 버튼 숨김 */
+            }
+
+            .main-nav ul {
+                display: flex;
+                position: static;
+                flex-direction: row;
+                background-color: transparent;
+                width: auto;
+            }
+
+            .main-nav li a {
+                padding: 10px 20px;
+                border-bottom: none;
+                font-weight: 500;
+            }
+
+            .main-nav li a:hover {
+                background-color: rgba(255,255,255,0.2);
+                border-radius: 20px;
+                padding-left: 20px; /* 이동 효과 초기화 또는 조정 */
+            }
+
+            .content-section {
+                display: flex;
+                gap: 40px;
+                align-items: flex-start;
+            }
+
+            .about-text { flex: 1; }
+            .profile-card { flex: 0 0 300px; margin-top: 0; }
+            
+            .skills-grid { grid-template-columns: repeat(4, 1fr); }
+
+            .project-card { width: 30%; margin-right: 3%; }
+            .project-card:nth-child(even) { margin-right: 3%; }
+            .project-card:nth-child(3n) { margin-right: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">My Dynamic Page</div>
+        <nav class="main-nav">
+            <ul>
+                <li><a href="#about">소개</a></li>
+                <li><a href="#skills">기술 스택</a></li>
+                <li><a href="#portfolio">포트폴리오</a></li>
+                <li><a href="#contact">연락처</a></li>
+            </ul>
+        </nav>
+        <button class="menu-toggle" aria-label="메뉴 열기">
+            &#9776; </button>
+    </header>
+
+    <main>
+        <section id="about" class="content-section">
+            <div class="about-text">
+                <h1>안녕하세요! 👋</h1>
+                <p>배경이 계속해서 움직이는 역동적인 페이지입니다. <br>버튼과 카드에 마우스를 올려보세요. 통통 튀는 애니메이션 효과를 확인하실 수 있습니다.</p>
+            </div>
+            <div class="profile-card">
+                <h2>프로필</h2>
+                <p><strong>이름:</strong> 임성하</p>
+                <p><strong>직업:</strong> 웹 퍼블리셔</p>
+                <p><strong>특징:</strong> 반응형 웹 마스터</p>
+            </div>
+        </section>
+
+        <section id="skills" class="content-section">
+            <h2>기술 스택 (Hover Me!)</h2>
+            <div class="skills-grid">
+                <div class="skill-item">HTML5</div>
+                <div class="skill-item">CSS3</div>
+                <div class="skill-item">JavaScript</div>
+                <div class="skill-item">React</div>
+                <div class="skill-item">Python</div>
+                <div class="skill-item">Git</div>
+            </div>
+        </section>
+
+        <section id="portfolio" class="content-section" style="display: block;">
+            <h2>주요 프로젝트</h2>
+            <div class="project-container">
+                <div class="project-card">
+                    <h3>프로젝트 1</h3>
+                    <p>쇼핑몰 웹사이트 리뉴얼</p>
+                </div>
+                <div class="project-card">
+                    <h3>프로젝트 2</h3>
+                    <p>기업 소개 페이지 제작</p>
+                </div>
+                <div class="project-card">
+                    <h3>프로젝트 3</h3>
+                    <p>반응형 대시보드 개발</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Dynamic Web Page. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // DOM 요소들이 모두 로드된 후 실행
+        document.addEventListener('DOMContentLoaded', () => {
+            const menuToggle = document.querySelector('.menu-toggle');
+            const nav = document.querySelector('.main-nav');
+            const navLinks = document.querySelectorAll('.main-nav a');
+
+            // 1. 햄버거 버튼 클릭 이벤트
+            menuToggle.addEventListener('click', () => {
+                nav.classList.toggle('active'); // 메뉴 보이기/숨기기
+                menuToggle.classList.toggle('open'); // 버튼 회전 효과
+            });
+
+            // 2. 메뉴 링크 클릭 시 닫기 (모바일 환경 편의성)
+            navLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    // 화면 너비가 1024px 미만일 때만(모바일/태블릿) 닫기 동작 수행
+                    if (window.innerWidth < 1024) { 
+                        nav.classList.remove('active');
+                        menuToggle.classList.remove('open'); // 버튼 상태도 원래대로
+                    }
+                });
+            });
+
+            // 3. 화면 크기 변경(Resize) 감지
+            window.addEventListener('resize', () => {
+                // 데스크톱 크기로 커지면 모바일 메뉴 상태 초기화
+                if (window.innerWidth >= 1024) {
+                    nav.classList.remove('active');
+                    menuToggle.classList.remove('open');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
